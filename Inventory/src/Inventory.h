@@ -4,8 +4,6 @@
 #include <vector>
 #include <algorithm>
 
-//#include "Vendors/Imgui/imgui_stdlib.h"
-
 class InventoryItems
 {
 public:
@@ -23,6 +21,11 @@ class Inventory
 private:
 	std::vector<InventoryItems> items;
 
+	int updatingIndex;
+	std::string updatingName;
+	int updatingQuantity = 0;
+	float updatingPrice = 0.0f;
+
 public:
 
 	bool showAddItemWindow = false;
@@ -38,9 +41,9 @@ public:
 	~Inventory();
 
 	bool productExists(const std::string& name) const;
+	void viewInventory(const int windowWidth, const int windowHeight);
 	void addItem();
-	void viewInventory();
-	void updateItem(std::string& updatingName);
-	void deleteItem(std::string& deletingName);
+	void updateItem();
+	void deleteItem(int deletingIndex);
 
 };

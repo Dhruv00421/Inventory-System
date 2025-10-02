@@ -31,6 +31,8 @@ void static option(Inventory &inventory)
 int main() 
 {
 	Inventory inventory;
+	int windowWidth = 960;
+	int windowHeight = 540;
 
 	if (!glfwInit())
 		return -1;
@@ -41,7 +43,8 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macOS if needed
 
-	GLFWwindow* window = glfwCreateWindow(960, 540, "Trial", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(960, 540, "Inventory", nullptr, nullptr);
+	//glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
 	if (!window)
 	{
 		glfwTerminate();
@@ -67,7 +70,6 @@ int main()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 
-	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui::StyleColorsDark();
 	ImGui_ImplOpenGL3_Init("#version 330 core");
@@ -77,7 +79,6 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		// Poll events first
 		glfwPollEvents();
 
 		// Start ImGui frame
@@ -85,13 +86,12 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		//ImGui::ShowDemoWindow(&show_demo_window);
-		ImGui::Begin("Inventory");
-		option(inventory);
-		ImGui::End();
+		glfwGetWindowSize(window, &windowWidth, &windowHeight);
+		inventory.showViewInventoryWindow = true;		
 
 		inventory.addItem();
-		inventory.viewInventory();
+		inventory.viewInventory(windowWidth, windowHeight);
+		inventory.updateItem();
 
 		// Rendering
 		ImGui::Render();
