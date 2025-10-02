@@ -11,28 +11,26 @@
 #include "Vendors/Imgui/imgui_impl_opengl3.h"
 
 
-void option(Inventory inventory) 
+void static option(Inventory &inventory) 
 {
-	std::string nameToEdit = "Book";
 	//std::cout << "1. Add Items" << std::endl << "2. View Inventory" << std::endl << "3. Update Item " << std::endl << "4. delete Item " << std::endl;
 	if (ImGui::Button("Add Items")) {
-		inventory.addItem("Book", 22, 12);
+		inventory.showAddItemWindow = true;
 	}
 	if (ImGui::Button("View Inventory")) {
-		inventory.viewInventory();
+		inventory.showViewInventoryWindow = true;
 	}
 	if (ImGui::Button("Update Item")) {
-		inventory.updateItem(nameToEdit);
+		inventory.showUpdateItemWindow = true;
 	}
 	if (ImGui::Button("Delete Item")) {
-		inventory.deleteItem(nameToEdit);
+		inventory.showdeleteItemWindow = true;
 	}
 }
 
 int main() 
 {
 	Inventory inventory;
-	bool show_demo_window = true;
 
 	if (!glfwInit())
 		return -1;
@@ -92,6 +90,9 @@ int main()
 		option(inventory);
 		ImGui::End();
 
+		inventory.addItem();
+		inventory.viewInventory();
+
 		// Rendering
 		ImGui::Render();
 
@@ -114,64 +115,4 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
-// 
-// 
-// 	 Inventory inventory;
-// 
-// 	 while (true)
-// 	 {
-// 	     std::cout << "Using C++ version: " << __cplusplus << std::endl;
-// 	     option();
-// 	     int choice;
-// 	     std::string name;
-// 	     int quantity;
-// 	     float price;
-// 	     // std::cin >> choice;
-// 
-// 	     if (!(std::cin >> choice)) {
-// 	         std::cout << "\nConsole closed or input ended. Exiting...\n";
-// 	         break;  // exit loop
-// 	     }
-// 
-// 	     std::string nameToUpdate;
-// 	     std::string deletingName;
-// 
-// 	     switch (choice)
-// 	     {
-// 	     case 1:
-// 	         std::cout << "Enter product name, quantity and price:" << std::endl;
-// 	         std::cout << "Product name: ";
-// 	         std::cin >> name;
-// 	         std::cout << "Product Quantity: ";
-// 	         std::cin >> quantity;
-// 	         std::cout << "Product price: ";
-// 	         std::cin >> price;
-// 	         inventory.addItem( name, quantity, price );
-// 	         break;
-// 
-// 	     case 2:
-// 	         inventory.viewInventory();
-// 	         break;
-// 
-// 	     case 3:
-// 	         std::cout << "Which product do you want to update?" << std::endl;
-// 	         std::cin >> nameToUpdate; 
-// 	         inventory.updateItem(nameToUpdate);
-// 	         break;
-// 
-// 	     case 4:
-// 	         inventory.viewInventory();
-// 	         std::cout << "Which product do you wish to delete?" << std::endl;
-// 	         std::cin >> deletingName;
-// 	         inventory.deleteItem(deletingName);
-// 	         break;
-// 
-// 	     default:
-// 	         std::cout << "Invalid Value" << std::endl;
-// 	         break;
-// 	     }
-// 	 }
-// 
-// 
-// 	 std::cin.get();
 }

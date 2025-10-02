@@ -1,5 +1,6 @@
 #include "Inventory.h"
 #include "Vendors/Imgui/imgui.h"
+#include "Vendors/Imgui/imgui_stdlib.h"
 
 Inventory::Inventory() {
 	std::cout << "Inventory created " << std::endl;
@@ -13,32 +14,52 @@ bool Inventory::productExists(const std::string& name) const {
 		}) != items.end();
 }
 
-void Inventory::addItem(std::string name, int quantity, float price)
+void Inventory::addItem()
 {
-	char text[128] = "";
-	int quantity = 0;
-	float price = 0.0f;
-	ImGui::Begin("Adding Item");
+	if (!showAddItemWindow) return;
 
-	ImGui::InputText("Item name", text, IM_ARRAYSIZE(text));
-	ImGui::InputInt("Item quantity", &quantity);
-	ImGui::InputFloat("Item price", &price);
+	ImGui::Begin("Adding Item", &showAddItemWindow );
 
-	ImGui::End();
-	
+	ImGui::InputText("Item name", &newItemName);
+	ImGui::InputInt("Item quantity", &newItemQuantity);
+	ImGui::InputFloat("Item price", &newItemPrice);
 
-	if (!productExists(name)) {
-		InventoryItems newItem(name, quantity, price);
-		items.push_back(newItem);
-		std::cout << "Item added " << std::endl;
-	}
-	else {
-		std::cout << "The product is already exists" << std::endl;
-		auto it = std::find_if(items.begin(), items.end(), [&](InventoryItems& items) {return items.productName == name; });
-		if (it != items.end()) {
-			it->productQuantity++;
+	if (ImGui::Button("Add")) {
+		if (newItemName.empty()) {
+			std::cout << "Item filed needed!" << std::endl;
+		}
+		else if (!productExists(newItemName)) {
+			InventoryItems newItem(newItemName, newItemQuantity, newItemPrice);
+			items.push_back(newItem);
+			std::cout << "Item added " << std::endl;
+			showAddItemWindow = false;
+			newItemName.clear();
+			newItemQuantity = 1;
+			newItemPrice = 0.0f;
+		}
+		else {
+			std::cout << "The product is already exists" << std::endl;
+			auto it = std::find_if(items.begin(), items.end(), [&](InventoryItems& items) {return items.productName == newItemName; });
+			if (it != items.end()) {
+				it->productQuantity++;
+			}
+			showAddItemWindow = false;
+			newItemName.clear();
+			newItemQuantity = 1;
+			newItemPrice = 0.0f;
 		}
 	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel")) {
+		showAddItemWindow = false;
+		newItemName.clear();
+		newItemQuantity = 1;
+		newItemPrice = 0.0f;
+	}
+
+	ImGui::End();
+
 
 }
 
