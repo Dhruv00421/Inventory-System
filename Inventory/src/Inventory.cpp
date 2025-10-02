@@ -18,8 +18,9 @@ void Inventory::viewInventory(const int windowWidth, const int windowHeight)
 {
 	if (!showViewInventoryWindow) return;
 
+	ImGui::SetNextWindowPos(ImVec2( 0, 0));
 	ImGui::Begin("View Inventory", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
-	ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(windowWidth + 5, windowHeight + 5), ImGuiCond_Always);
 
 	int column = 4;
 	int emptySlots = column - (items.size() % column);
@@ -36,8 +37,9 @@ void Inventory::viewInventory(const int windowWidth, const int windowHeight)
 				ImGui::Text("Name: %s", items[i].productName.c_str());
 				ImGui::Text("Qty: %d", items[i].productQuantity);
 				ImGui::Text("Price: %.2f", items[i].productPrice);
-				if (ImGui::IsItemHovered()) {
-					ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(100, 100, 250, 50));
+				if (ImGui::IsWindowHovered()) {
+					// draw highlight (child window is current window so GetItemXXX is OK)
+					ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetWindowPos(), ImVec2(ImGui::GetWindowPos().x + ImGui::GetWindowWidth(), ImGui::GetWindowPos().y + ImGui::GetWindowHeight()), IM_COL32(100, 100, 250, 50));
 				}
 
 				if (ImGui::Button("update")) {
@@ -58,9 +60,6 @@ void Inventory::viewInventory(const int windowWidth, const int windowHeight)
 			else {
 				ImGui::BeginChild("EmptySlots", ImVec2(200, 200), true);
 				ImGui::Text("Add Item");
-				if (ImGui::IsItemHovered()) {
-					ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(100, 100, 250, 50));
-				}
 
 				if (ImGui::Button("Add Item")) {
 					showAddItemWindow = true;
@@ -85,7 +84,9 @@ void Inventory::addItem()
 {
 	if (!showAddItemWindow) return;
 
+	ImGui::SetNextWindowSize(ImVec2(320, 220), ImGuiCond_Always);
 	ImGui::Begin("Adding Item", &showAddItemWindow );
+	//ImGui::SetNextWindowSize(ImVec2(100, 100), ImGuiCond_Always);
 
 	ImGui::InputText("Item name", &newItemName);
 	ImGui::InputInt("Item quantity", &newItemQuantity);
@@ -135,6 +136,7 @@ void Inventory::updateItem()
 {
 	if (!showUpdateItemWindow) return;
 
+	ImGui::SetNextWindowSize(ImVec2(320, 220), ImGuiCond_Always);
 	ImGui::Begin("Adding Item", &showUpdateItemWindow);
 
 	ImGui::InputText("Item name", &updatingName);
