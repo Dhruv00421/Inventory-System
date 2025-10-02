@@ -137,7 +137,7 @@ void Inventory::updateItem()
 	if (!showUpdateItemWindow) return;
 
 	ImGui::SetNextWindowSize(ImVec2(320, 220), ImGuiCond_Always);
-	ImGui::Begin("Adding Item", &showUpdateItemWindow);
+	ImGui::Begin("Update Item", &showUpdateItemWindow);
 
 	ImGui::InputText("Item name", &updatingName);
 	ImGui::InputInt("Item quantity", &updatingQuantity);
